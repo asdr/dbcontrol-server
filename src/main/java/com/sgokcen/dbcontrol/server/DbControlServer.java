@@ -12,10 +12,10 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 @SpringBootApplication
 @ServletComponentScan(basePackages = {"com.sgokcen.dbcontrol.server.configuration"})
-public class DBOpsServer {
+public class DbControlServer {
 
     public static void main(String[] args) {
-        SpringApplication.run(DBOpsServer.class, args);
+        SpringApplication.run(DbControlServer.class, args);
     }
 
     // Security

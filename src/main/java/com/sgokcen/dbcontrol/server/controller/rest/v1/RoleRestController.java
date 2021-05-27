@@ -9,6 +9,9 @@ import com.sgokcen.dbcontrol.server.controller.model.req.RoleRequestModel;
 import com.sgokcen.dbcontrol.server.controller.model.res.RoleResponseModel;
 import com.sgokcen.dbcontrol.server.dto.RoleDTO;
 import com.sgokcen.dbcontrol.server.service.RoleService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,9 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 
 @RestController
 @RequestMapping(path = "/rest/v1/roles")
@@ -58,8 +58,8 @@ public class RoleRestController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="x-auth-token", value="<token value>", paramType="header")
+    @Parameters({
+        @Parameter(name="x-auth-token", description="<token value>", in=ParameterIn.HEADER)
     })
     @GetMapping(
             produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
@@ -76,8 +76,8 @@ public class RoleRestController {
         return roleList;
     }
     
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="x-auth-token", value="<token value>", paramType="header")
+    @Parameters({
+        @Parameter(name="x-auth-token", description="<token value>", in=ParameterIn.HEADER)
     })
     @DeleteMapping(path = "/{name}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<?> deleteRole(@PathVariable String name) {

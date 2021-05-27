@@ -10,6 +10,9 @@ import com.sgokcen.dbcontrol.server.dto.DatasourceDTO;
 import com.sgokcen.dbcontrol.server.dto.RepositoryDTO;
 import com.sgokcen.dbcontrol.server.service.DatasourceService;
 import com.sgokcen.dbcontrol.server.service.RepositoryService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,9 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-
 @RestController
 @RequestMapping(path = "/rest/v1/repositories")
 public class RepositoryRestController {
@@ -37,9 +37,9 @@ public class RepositoryRestController {
     public RepositoryRestController(RepositoryService repositoryService, DatasourceService datasourceService) {
         this.repositoryService = repositoryService;
     }
-    
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="x-auth-token", value="[Token Value]", paramType="header")
+
+    @Parameters({
+        @Parameter(name="x-auth-token", description="[Token Value]", in=ParameterIn.HEADER)
     })
     @PostMapping(
             consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
@@ -47,31 +47,31 @@ public class RepositoryRestController {
             )
     public ResponseEntity<RepositoryResponseModel> createRepository(@RequestBody RepositoryRequestModel repository) {
         ModelMapper modelMapper = new ModelMapper();
-        
+
         RepositoryDTO repositoryDTO = modelMapper.map(repository, RepositoryDTO.class);
         DatasourceDTO datasourceDTO = new DatasourceDTO();
         datasourceDTO.setName(repository.getDatasourceName());
         repositoryDTO.setDatasource(datasourceDTO);
-        
+
         RepositoryDTO createdRepository = this.repositoryService.createModel(repositoryDTO);
-        
+
         if (createdRepository != null) {
             URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{repoId}")
                     .buildAndExpand(createdRepository.getUniqueId()).toUri();
 
-            ResponseEntity<RepositoryResponseModel> returnValue = 
+            ResponseEntity<RepositoryResponseModel> returnValue =
                     ResponseEntity
                     .created(location)
                     .body(modelMapper.map(createdRepository, RepositoryResponseModel.class));
-            
+
             return returnValue;
         }
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-    
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="x-auth-token", value="[Token Value]", paramType="header")
+
+    @Parameters({
+            @Parameter(name="x-auth-token", description="[Token Value]", in=ParameterIn.HEADER)
     })
     @DeleteMapping(path = "/{uniqueId}")
     public ResponseEntity<?> deleteRepository(@PathVariable String uniqueId) {
@@ -79,8 +79,8 @@ public class RepositoryRestController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="x-auth-token", value="[Token Value]", paramType="header")
+    @Parameters({
+            @Parameter(name="x-auth-token", description="[Token Value]", in=ParameterIn.HEADER)
     })
     @GetMapping(path = "/{uniqueId}",produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<RepositoryResponseModel> getRepository(@PathVariable String uniqueId) {
@@ -91,9 +91,9 @@ public class RepositoryRestController {
         
         return returnValue;
     }
-    
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="x-auth-token", value="[Token Value]", paramType="header")
+
+    @Parameters({
+            @Parameter(name="x-auth-token", description="[Token Value]", in=ParameterIn.HEADER)
     })
     @GetMapping(path = "/",produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<List<RepositoryResponseModel>> getRepositoryList(int page, int limit) {

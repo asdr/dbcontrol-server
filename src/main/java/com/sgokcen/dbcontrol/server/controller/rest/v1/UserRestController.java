@@ -8,6 +8,9 @@ import com.sgokcen.dbcontrol.server.controller.model.req.UserRequestModel;
 import com.sgokcen.dbcontrol.server.controller.model.res.UserResponseModel;
 import com.sgokcen.dbcontrol.server.dto.UserDTO;
 import com.sgokcen.dbcontrol.server.service.UserService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,9 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-
 @RestController
 @RequestMapping(path = "/rest/v1/users")
 public class UserRestController {
@@ -37,8 +37,8 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="x-auth-token", value="[Token Value]", paramType="header")
+    @Parameters({
+        @Parameter(name="x-auth-token", description="[Token Value]", in=ParameterIn.HEADER)
     })
     @GetMapping(
             path = "/{userId}", 
@@ -77,8 +77,8 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="x-auth-token", value="<token value>", paramType="header")
+    @Parameters({
+        @Parameter(name="x-auth-token", description="<token value>", in=ParameterIn.HEADER)
     })
     @GetMapping(
             produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }
@@ -96,8 +96,8 @@ public class UserRestController {
         return userList;
     }
     
-    @ApiImplicitParams({
-        @ApiImplicitParam(name="x-auth-token", value="<token value>", paramType="header")
+    @Parameters({
+        @Parameter(name="x-auth-token", description="<token value>", in=ParameterIn.HEADER)
     })
     @DeleteMapping(path = "/{uniqueId}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<?> deleteUser(@PathVariable String uniqueId) {
